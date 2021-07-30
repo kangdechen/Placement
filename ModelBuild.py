@@ -25,6 +25,7 @@ def data_load(data_dir, test_data_dir, img_height, img_width, batch_size):
 # 构建CNN模型
 def model_load(IMG_SHAPE=(224, 224, 3), class_num=6):
     # 搭建模型
+
     model = tf.keras.models.Sequential([
         # 对模型做归一化的处理，将0-255之间的数字统一处理到0到1之间
         tf.keras.layers.experimental.preprocessing.Rescaling(1. / 255, input_shape=IMG_SHAPE),
@@ -35,6 +36,10 @@ def model_load(IMG_SHAPE=(224, 224, 3), class_num=6):
         # Add another convolution
         # 卷积层，输出为64个通道，卷积核大小为3*3，激活函数为relu
         tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+        # 池化层，最大池化，对2*2的区域进行池化操作
+        #another layer
+        tf.keras.layers.MaxPooling2D(2, 2),
+        tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
         # 池化层，最大池化，对2*2的区域进行池化操作
         tf.keras.layers.MaxPooling2D(2, 2),
         # 将二维的输出转化为一维
@@ -88,7 +93,7 @@ def train(epochs):
     # 指明训练的轮数epoch，开始训练
     history = model.fit(train_ds, validation_data=val_ds, epochs=epochs)
     # 保存模型
-    model.save("models/cnn_fv.h5")
+    model.save("models/cnn_fv_test2.h5")
     # 记录结束时间
     end_time = time()
     run_time = end_time - begin_time
@@ -97,4 +102,4 @@ def train(epochs):
     show_loss_acc(history)
 
 if __name__ == '__main__':
-    train(epochs=10)
+    train(epochs=30)

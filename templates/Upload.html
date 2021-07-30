@@ -9,14 +9,15 @@
       <p><input type="file" name="file"></p>
       <p><input type="submit" value="Submit"></p>
     </form>
+    <input type="button" onclick="location.href='http://192.168.1.11:8888/uploads/camera';" value="camera" />
     <hr>
     {% for file in files %}
       <img src="{{ url_for('upload', filename=file) }}" style="width: 100px">
 
+    {% endfor %}
 
-
-  {% for file in files %}
-    <h1 >Fruit Name: <a src="{{ url_for('predict_img', filename=file) }}"></a></h1>
-  {% endfor %}
+    {% for text in result %}
+       <h1>  Fruit Name:   {{text}}</h1>
+    {% endfor %}
   </body>
-</html>     8 <E3WEW>S.036+</E3WEW>
+</html>

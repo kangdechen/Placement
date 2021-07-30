@@ -1,12 +1,17 @@
 import imghdr
 import os
+
+
+import datetime
+import random
 from flask import Flask, render_template, request, redirect, url_for, abort, \
     send_from_directory
 from werkzeug.utils import secure_filename
 import tensorflow as tf
 from PIL import Image
 import  numpy as np
-import  cv2
+import cv2
+from PIL import Image
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']
@@ -24,7 +29,18 @@ def validate_image(stream):
 @app.route('/')
 def index():
     files = os.listdir(app.config['UPLOAD_PATH'])
-    return render_template('Upload.html', files=files)
+    result=[]
+    for file in files:
+        filename=predict_test(file)
+        result.append(filename)
+    return render_template('Upload.html', files=files,result=result)
+def create_uuid():
+        nowTime = datetime.datetime.now().strftime("%Y%m%d%H%M%S");
+        randomNum = random.randint(0, 100);
+        if randomNum <= 10:
+            randomNum = str(0) + str(randomNum);
+        uniqueNum = str(nowTime) + str(randomNum);
+        return uniqueNum;
 
 @app.route('/', methods=['POST'])
 def upload_files():
@@ -35,6 +51,7 @@ def upload_files():
         if file_ext not in app.config['UPLOAD_EXTENSIONS'] or \
                 file_ext != validate_image(uploaded_file.stream):
             abort(400)
+        filename=filename+create_uuid()
         uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
     return redirect(url_for('upload_files'))
 
@@ -43,10 +60,10 @@ def upload(filename):
     return send_from_directory(app.config['UPLOAD_PATH'], filename)
 
 
-@app.route('/predict/<filename>')
+#@app.route('/predict/<filename>')
 def predict_img(filename):
     # img = Image.open('uploads/34_100.jpg')  # 读取图片
-    img = cv2.imread('uploads/',filename)
+    img = cv2.imread('uploads/'+filename)
     # resize图片大小 先将原本的(224,222,3) ---> (28,28,3)
     pred_img = cv2.resize(img, (224, 224))
     # 转换np数组格式
@@ -56,19 +73,17 @@ def predict_img(filename):
     # 查看reshape后的图片shape
     print(pred_img.shape)
     # turn img to numpy tensor
-    model = tf.keras.models.load_model("models/cnn_fv.h5")
+    model = tf.keras.models.load_model("models/cnn_fv_test2.h5")
     outputs = model.predict(pred_img)  # 将图片输入模型得到结果
     result_index = int(np.argmax(outputs))
     result = class_names[result_index]  # 获得对应的水果名称
 
     print(result)
-    return result # 在界面上做显示
+    return result
 
-def predict_test():
-
-
-    #img = Image.open('uploads/34_100.jpg')  # 读取图片
-    img =cv2.imread('uploads/34_100.jpg')
+def predict_test(filename):
+    # img = Image.open('uploads/34_100.jpg')  # 读取图片
+    img = cv2.imread('uploads/' + filename)
     # resize图片大小 先将原本的(224,222,3) ---> (28,28,3)
     pred_img = cv2.resize(img, (224, 224))
     # 转换np数组格式
@@ -78,15 +93,38 @@ def predict_test():
     # 查看reshape后的图片shape
     print(pred_img.shape)
     # turn img to numpy tensor
-    model = tf.keras.models.load_model("models/cnn_fv.h5")
-    outputs = model.predict(pred_img) # 将图片输入模型得到结果
+    model = tf.keras.models.load_model("models/cnn_fv_test2.h5")
+    outputs = model.predict(pred_img)  # 将图片输入模型得到结果
     result_index = int(np.argmax(outputs))
     result = class_names[result_index]  # 获得对应的水果名称
 
     print(result)
-
+    return result
 
     return result
+
+@app.route('/uploads/camera')
+def camera():
+
+    cap = cv2.VideoCapture(0)  # 打开摄像头
+
+    while (1):
+        # get a frame
+        ret, frame = cap.read()
+        # show a frame
+        cv2.imshow("capture", frame)  # 生成摄像头窗口
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):  # 如果按下q 就截图保存并退出
+            cv2.imwrite("C:/Users/a0023/PycharmProjects/MasterProject/uploads/temp"+create_uuid()+".jpg", frame)  # 保存路径
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    # 将图片处理成指定的格式 这里为299*299
+
+    return redirect(url_for('upload_files'))
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port='8888')
     #predict_test()
+    #camera()
