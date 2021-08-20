@@ -85,15 +85,15 @@ def train(epochs):
     # 开始训练，记录开始时间
     begin_time = time()
     # 加载数据集
-    train_ds, val_ds, class_names = data_load("data/fruits-360/Training",
-                                              "data/fruits-360/Test", 224, 224, 16)
+    train_ds, val_ds, class_names = data_load("output/train",
+                                              "output/val", 224, 224, 16)
     print(class_names)
     # 加载模型
     model = model_load(class_num=len(class_names))
     # 指明训练的轮数epoch，开始训练
     history = model.fit(train_ds, validation_data=val_ds, epochs=epochs)
     # 保存模型
-    model.save("models/cnn_fv_test2.h5")
+    model.save("models/cnn_fv_food.h5")
     # 记录结束时间
     end_time = time()
     run_time = end_time - begin_time
@@ -102,4 +102,4 @@ def train(epochs):
     show_loss_acc(history)
 
 if __name__ == '__main__':
-    train(epochs=30)
+    train(epochs=10)

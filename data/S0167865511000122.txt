@@ -1,0 +1,11 @@
+O. Déniz, G. Bueno, J. Salido, F. De la Torre,
+Face recognition using Histograms of Oriented Gradients,
+Pattern Recognition Letters,
+Volume 32, Issue 12,
+2011,
+Pages 1598-1603,
+ISSN 0167-8655,
+https://doi.org/10.1016/j.patrec.2011.01.004.
+(https://www.sciencedirect.com/science/article/pii/S0167865511000122)
+Abstract: Face recognition has been a long standing problem in computer vision. Recently, Histograms of Oriented Gradients (HOGs) have proven to be an effective descriptor for object recognition in general and face recognition in particular. In this paper, we investigate a simple but powerful approach to make robust use of HOG features for face recognition. The three main contributions of this work are: First, in order to compensate for errors in facial feature detection due to occlusions, pose and illumination changes, we propose to extract HOG descriptors from a regular grid. Second, fusion of HOG descriptors at different scales allows to capture important structure for face recognition. Third, we identify the necessity of performing dimensionality reduction to remove noise and make the classification process less prone to overfitting. This is particularly important if HOG features are extracted from overlapping cells. Finally, experimental results on four databases illustrate the benefits of our approach.
+Keywords: Face recognition; Histograms of Oriented Gradients; Active Appearance Models

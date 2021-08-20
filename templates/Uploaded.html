@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>File Upload</title>
+  </head>
+  <body>
+    <h1>File Upload</h1>
+    <p>Welcome back, {{ username }}!</p>
+
+    <hr>
+    <link src="Upload.html">home</link>
+    file={{files}}
+
+      <img src="{{ url_for('upload', filename=files) }}" style="width: 100px">
+
+
+
+
+       <h1>  meal Name:   {{result}}</h1>
+
+    <select name= meal method="GET" action="{{ url_for('getfoodNuitri', name=result) }}">
+    {% for meal in meals %}
+    <option value= "{{meal}}" SELECTED>{{meal}}</option>"
+    {% endfor %}
+  </select>
+
+  </body>
+</html>

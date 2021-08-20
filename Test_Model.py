@@ -33,10 +33,10 @@ def test_cnn():
 
 def test_mobile_net():
     # 加载数据集
-    train_ds, val_ds, class_names = data_load("data/fruits-360/Training",
-                                              "data/fruits-360/Test", 224, 224, 16)
+    train_ds, val_ds, class_names = data_load("output/train",
+                                              "output/val", 224, 224, 16)
     # 加载模型
-    model = tf.keras.models.load_model("models/cnn_fv_test2.h5")
+    model = tf.keras.models.load_model("models/cnn_fv_food.h5")
     # model.summary()
     # 测试
     loss, accuracy = model.evaluate(val_ds)
